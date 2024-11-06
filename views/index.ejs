@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <%- include('head.ejs', {title: title}) %>
+  <body>
+    <main role="main" class="container ts">
+      <div class="row">
+        <div class="col-12 text-center">
+        </div>
+      </div>
+      <ul class="no-list-style w-100 d-flex justify-content-center" id="myTab" role="tablist">
+        <li class="d-inline" role="presentation">
+          <button class="btn btn-default border active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false" tabindex="-1">Inbox</button>
+        </li>
+        <li class="d-inline" role="presentation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+        <li class="d-inline" role="presentation">
+          <button class="btn btn-default border" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Archived</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+          <form id="inboxTab" method="post" action="/" class="mt-4">
+            <input type="hidden" id="inboxActionType" name="actionType" value="adsf">
+            <div class="row mb-3 d-flex justify-content-center">
+              <div class="col-12 p-0">
+                  <input class="form-check-input" type="checkbox" value="" id="inboxCheckAll">&nbsp;&nbsp;
+                  <input type="submit" class="btn btn-default border border-dark inbox-submit-btn" value="Mark Read" />&nbsp;&nbsp;
+                  <input type="submit" class="btn btn-default border border-dark inbox-submit-btn" value="Mark Unread" />&nbsp;&nbsp;
+                  <input type="submit" class="btn btn-default border border-dark inbox-submit-btn" value="Archive" />
+              </div>
+            </div>
+            <% for(var i=0; i < inboxData.length; i++) { %>
+              <a class="text-decoration-none" href="/inbox/<%= inboxData[i].id %>">
+                <div class="row border border-end-0 border-start-0 table-hover p-2 <%= inboxData[i].isRead ? '' : 'fw-bold' %> ">
+                  <div class="col-1 p-0">
+                    <div class="form-check">
+                      <input class="form-check-input inbox-check" type="checkbox" name="mailId[]" id="<%= inboxData[i].id %>" value="<%= inboxData[i].id %>"/>
+                    </div>
+                  </div>
+                  <div class="col-2 ps-0">
+                    <p title="<%= inboxData[i].from %>" class="d-inline"><%= inboxData[i].name %></p>
+                  </div>
+                  <div class="col-8">
+                    <%= inboxData[i].subject %>
+                  </div>
+                  <div class="col-1">
+                    <%= inboxData[i].date %>
+                  </div>
+                </div>
+              </a>
+            <% } %>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+          <form id="archiveTab" method="post" action="/" class="mt-4">
+            <input type="hidden" id="archiveActionType" name="actionType" value="adsf">
+            <div class="row mb-3 d-flex justify-content-center">
+              <div class="col-12 p-0">
+                <input class="form-check-input" type="checkbox" value="" id="archiveCheckAll">&nbsp;&nbsp;
+                <input type="submit" class="btn btn-default border border-dark archive-submit-btn" value="Mark Read" />&nbsp;&nbsp;
+                <input type="submit" class="btn btn-default border border-dark archive-submit-btn" value="Mark Unread" />&nbsp;&nbsp;
+                <input type="submit" class="btn btn-default border border-dark archive-submit-btn" value="Un Archive" />&nbsp;&nbsp;
+              </div>
+            </div>
+            <% for(var i=0; i < archivedData.length; i++) { %>
+              <a href="/inbox/<%= archivedData[i].id %>">
+                <div class="row border border-end-0 border-start-0 table-hover p-2 <%= archivedData[i].isRead ? '' : 'fw-bold' %> ">
+                  <div class="col-1 p-0">
+                    <div class="form-check">
+                      <input class="form-check-input archive-check" type="checkbox" name="mailId[]" id="<%= archivedData[i].id %>" value="<%= archivedData[i].id %>"/>
+                    </div>
+                  </div>
+                  <div class="col-3 ps-0">
+                    <p title="<%= archivedData[i].from %>" class="d-inline"><%= archivedData[i].name %></p>
+                  </div>
+                  <div class="col-6">
+                    <%= archivedData[i].subject %>
+                  </div>
+                  <div class="col-1">
+                    <%= archivedData[i].date %>
+                  </div>
+                </div>
+              </a>
+            <% } %>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script>
+    let inboxActionType = document.querySelector('#inboxActionType');
+    let archiveActionType = document.querySelector('#archiveActionType');
+    let inboxSubmitBtn = document.querySelectorAll('.inbox-submit-btn');
+    let inboxCheck = document.querySelectorAll('.inbox-check');
+    let inboxCheckAll = document.querySelector('#inboxCheckAll');
+    let archiveSubmitBtn = document.querySelectorAll('.archive-submit-btn');
+    let archiveCheck = document.querySelectorAll('.archive-check');
+    let archiveCheckAll = document.querySelector('#archiveCheckAll');
+
+    inboxSubmitBtn.forEach((node, index) => {
+      node.onclick = () => {
+        inboxActionType.value = node.value
+      }
+    })
+    inboxCheckAll.onchange = (e) => {
+      inboxCheck.forEach(cb => {
+        if (e.target.checked) {
+          cb.checked = true;
+        } else {
+          cb.checked = false;
+        }
+      })
+    }
+    archiveSubmitBtn.forEach((node, index) => {
+      node.onclick = () => {
+        archiveActionType.value = node.value
+      }
+    })
+    archiveCheckAll.onchange = (e) => {
+      archiveCheck.forEach(cb => {
+        if (e.target.checked) {
+          cb.checked = true;
+        } else {
+          cb.checked = false;
+        }
+      })
+    }
+  </script>
+</html>

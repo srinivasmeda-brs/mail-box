@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <%- include('head.ejs', {title: 'Mail Box'}) %>
+  <body>
+    <main role="main" class="container ts">
+      <div class="row mb-3">
+        <div class="col-1">
+          <a class="text-decoration-none d-flex aligns-items-center" href="/">
+            <h1>&#x2190;</h1>
+          </a>
+        </div>
+        <div class="col-2 ">
+          <form method="post" action="/">
+            <input class="form-check-input d-none" type="checkbox" name="mailId[]" id="<%= mailDetails.id %>" value="<%= mailDetails.id %>" checked />
+            <input type="hidden" name="actionType" value="<%= mailDetails.isArchived ? 'Un Archive' : 'Archive' %>">
+          	<input type="submit" class="btn btn-default border border-dark submit-btn d-flex aligns-items-center" value="<%= mailDetails.isArchived ? 'Un Archive' : 'Archive' %>" />
+          </form>
+        </div>
+        <div class="col-2">
+          <form method="post" action="/">
+            <input class="form-check-input d-none" type="checkbox" name="mailId[]" id="<%= mailDetails.id %>" value="<%= mailDetails.id %>" checked />
+            <input type="hidden" name="actionType" value="<%= mailDetails.isRead ? 'Mark Unread' : 'Mark Read' %>">
+        	  <input type="submit" class="btn btn-default border border-dark submit-btn" value="<%= mailDetails.isRead ? 'Mark Unread' : 'Mark Read' %>" />
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h3>Subject: <%= mailDetails.subject %></h3>
+          <p><i>From <h5 class="d-inline"><%= mailDetails.name %></h5>&nbsp;<%= mailDetails.from %> on <%= mailDetails.date %></i></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <%- mailDetails.content %>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
